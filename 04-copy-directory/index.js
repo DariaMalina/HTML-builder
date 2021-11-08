@@ -10,18 +10,24 @@ const copyFiles = async (message) => {
         fs.promises.copyFile(path.join(__dirname, 'files', el), path.join(__dirname, 'files-copy', el));
       });
       Promise.all(arr)
-        .then(console.log(message));
+        .then(() => {
+          console.log(message);
+        });
     });
 };
 let copyDir = async () => {
-  return fs.stat(path.join(__dirname, 'files-copy'), (err => {
-    if (!err) {
+  return fs.promises.stat(path.join(__dirname, 'files-copy'))
+    .then(() => {
       copyFiles(updatingFolderData);
-    } else if (err.code === 'ENOENT') {//если папки не существует
-      fs.promises.mkdir('files-copy', {recursive: true})
-        .then(copyFiles(createFolderData));
-    }
-  }));
+    })
+    .catch(err => {
+      if (err.code === 'ENOENT') {
+        fs.promises.mkdir('files-copy', {recursive: true})
+          .then(() => {
+            copyFiles(createFolderData);
+          });
+      }
+    });
 
 };
 copyDir();
