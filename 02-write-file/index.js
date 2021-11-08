@@ -10,11 +10,11 @@ rl.on('line', (answer) => {
     rl.close();
     console.log('See you!');
   }
-  fs.appendFile(path.join(__dirname, 'text.txt'), answer + '\n', 'utf8',).catch(function (err) {
-    if (err) throw err;
+  fs.appendFile(path.join(__dirname, 'text.txt'), answer + '\n', 'utf8',).catch(err => {
+    console.log(err);
   });
 });
 
-process.on('.exit', () => {
+process.on('exit', () => {
   console.log('\n' + 'See you!');
 });

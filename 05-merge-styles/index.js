@@ -11,32 +11,30 @@ const func = async () => {
       if (!err) {//если существует
         fs.promises.readdir(folderToCopy)
           .then(files => {
-            let arrFilesStyle = files;
-            for (let i = 0; i < arrFilesStyle.length; i++) {
-              if (path.extname(arrFilesStyle[i]) === '.css') {
-                let content = fs.readFileSync(path.join(folderToCopy, arrFilesStyle[i]), 'utf8');
-                fs.promises.writeFile(wayUpBundle, content + '\n');
+            fs.promises.writeFile(wayUpBundle, '');
+            let arrFilesStyle = files.map(el => {
+              if (path.extname(el) === '.css') {
+                let content = fs.readFileSync(path.join(folderToCopy, el), 'utf8');
+                fs.promises.appendFile(wayUpBundle, '\n' + content);
               }
-            }
+            });
+            Promise.all(arrFilesStyle).then(console.log(dateUpdate));
           });
-        console.log(dateUpdate);
+
       } else if (err.code === 'ENOENT') {//если не существует
         fs.promises.readdir(folderToCopy)
           .then(files => {
-            let arrFilesStyle = files;
-            for (let i = 0; i < arrFilesStyle.length; i++) {
-              if (path.extname(arrFilesStyle[i]) === '.css') {
-                let content = fs.readFileSync(path.join(folderToCopy, arrFilesStyle[i]), 'utf8');
+            let arrFilesStyle = files.map(el => {
+              if (path.extname(el) === '.css') {
+                let content = fs.readFileSync(path.join(folderToCopy, el), 'utf8');
                 fs.promises.appendFile(wayUpBundle, content + '\n');
               }
-            }
+            });
+            Promise.all(arrFilesStyle).then(console.log(dateCreate));
           });
-        console.log(dateCreate);
       }
     }
     );
-
-
   } catch (error) {
     console.log(error);
   }
