@@ -13,8 +13,9 @@ const func = async () => {
           fs.promises.writeFile(wayUpBundle, '');
           let arrFilesStyle = files.map(el => {
             if (path.extname(el) === '.css') {
-              let content = fs.readFileSync(path.join(folderToCopy, el), 'utf8');
-              fs.promises.appendFile(wayUpBundle, '\n' + content);
+              fs.promises.readFile(path.join(folderToCopy, el), 'utf8')
+                .then(data => fs.promises.appendFile(wayUpBundle, '\n' + data));
+
             }
           });
           Promise.all(arrFilesStyle).then(() => {
@@ -29,8 +30,11 @@ const func = async () => {
           .then(files => {
             let arrFilesStyle = files.map(el => {
               if (path.extname(el) === '.css') {
-                let content = fs.readFileSync(path.join(folderToCopy, el), 'utf8');
-                fs.promises.appendFile(wayUpBundle, content + '\n');
+                fs.promises.readFile(path.join(folderToCopy, el), 'utf8')
+                  .then(data => {
+                    fs.promises.appendFile(wayUpBundle, data + '\n');
+                  });
+
               }
             });
             Promise.all(arrFilesStyle).then(() => {
