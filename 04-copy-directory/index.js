@@ -4,8 +4,15 @@ const updatingFolderData='The data has been successfully updated.';
 const createFolderData='Folder created successfully.';
 
 const copyFiles = async (message) => {
-  fs.promises.readdir(path.join(__dirname, 'files'))
+  fs.promises.readdir(path.join(__dirname, 'files-copy'))
     .then(files => {
+      files.map(el => {
+        fs.promises.unlink(path.join(__dirname, 'files-copy', el));
+      });
+    });
+  fs.promises.readdir(path.join(__dirname, 'files'))
+    .then(async files => {
+
       let arr = files.map(async el => {
         await fs.promises.copyFile(path.join(__dirname, 'files', el), path.join(__dirname, 'files-copy', el));
       });
